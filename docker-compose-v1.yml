@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wetcleaning-backend
+    ports:
+      - "${BACKEND_PORT:-4000}:4000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+    volumes:
+      - ./backend/src:/app/src
+      - /app/node_modules
+    depends_on:
+      - blockchain
+    networks:
+      - wetcleaning-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: wetcleaning-frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+    volumes:
+      - ./frontend/src:/app/src
+      - /app/node_modules
+    networks:
+      - wetcleaning-network
+
+  go-service:
+    build:
+      context: ./go-service
+      dockerfile: Dockerfile
+    container_name: wetcleaning-go-service
+    ports:
+      - "${GO_SERVICE_PORT:-8080}:8080"
+    volumes:
+      - ./go-service:/app
+    depends_on:
+      - blockchain
+    networks:
+      - wetcleaning-network
+
+  blockchain:
+    build:
+      context: ./blockchain
+      dockerfile: Dockerfile
+    container_name: wetcleaning-blockchain
+    ports:
+      - "${BLOCKCHAIN_PORT:-7051}:7051"
+    volumes:
+      - ./blockchain:/fabric
+    networks:
+      - wetcleaning-network
+
+  chaincode:
+    build:
+      context: ./chaincode/wetcleaning
+      dockerfile: Dockerfile
+    container_name: wetcleaning-chaincode
+    networks:
+      - wetcleaning-network
+
+networks:
+  wetcleaning-network:
+    driver: bridge

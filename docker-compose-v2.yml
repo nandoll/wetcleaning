@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - blockchain
+    networks:
+      - wetcleaning-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    networks:
+      - wetcleaning-network
+
+  blockchain:
+    build: ./blockchain
+    ports:
+      - "7051:7051"
+    networks:
+      - wetcleaning-network
+
+  go-service:
+    build: ./go-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - blockchain
+    networks:
+      - wetcleaning-network
+
+networks:
+  wetcleaning-network:
+    driver: bridge

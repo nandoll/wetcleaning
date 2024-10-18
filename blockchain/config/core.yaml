@@ -1,0 +1,66 @@
+# core.yaml
+
+################################################################################
+#   Configuración del Peer para Hyperledger Fabric                             #
+################################################################################
+
+# Identificador del Peer
+peer:
+  id: peer0.org1.example.com
+  # Dirección de red del peer
+  networkId: dev
+  # Dirección y puerto en el que el peer escucha
+  address: 0.0.0.0:7051
+  # Dirección en la que el peer escucha conexiones entrantes
+  listenAddress: 0.0.0.0:7051
+  # Dirección para el chaincode
+  chaincodeListenAddress: 0.0.0.0:7052
+  chaincodeAddress: 0.0.0.0:7052
+  # Número máximo de procesos Go
+  gomaxprocs: -1
+  # Intervalo mínimo de keepalive
+  keepalive:
+    minInterval: 60s
+
+# Configuración del almacenamiento del ledger
+ledger:
+  state:
+    # Base de datos para el estado (goleveldb o CouchDB)
+    stateDatabase: goleveldb
+
+# Configuración de Gossip
+gossip:
+  bootstrap: peer0.org1.example.com:7051
+  useLeaderElection: true
+  orgLeader: false
+  # Parámetros adicionales de Gossip
+  # ...
+
+# Configuración de TLS
+tls:
+  enabled: false
+  # Rutas a los certificados TLS si están habilitados
+  # cert:
+  # key:
+  # rootcert:
+
+# Configuración del MSP local
+localMspId: Org1MSP
+mspConfigPath: /etc/hyperledger/fabric/msp
+
+# Configuración de logs
+logging:
+  level: info
+  # Puedes ajustar niveles para módulos específicos
+  # peer:
+  #   gossip: error
+  #   ledger: info
+
+# Configuración del chaincode
+chaincode:
+  # Tiempo de espera para iniciar el chaincode
+  startuptimeout: 300s
+  # Tiempo de ejecución máximo
+  executetimeout: 30s
+  # Modo de ejecución (docker o ejecutable)
+  # mode: dev
